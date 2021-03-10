@@ -4,7 +4,7 @@ from mmcv.cnn import ConvModule, xavier_init
 from mmcv.runner import auto_fp16
 
 from ..builder import NECKS
-from ..utils.involution import involution
+from ..utils.involution_cuda import involution
 
 
 @NECKS.register_module()

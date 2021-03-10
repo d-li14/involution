@@ -6,7 +6,7 @@ from mmcv.utils.parrots_wrapper import _BatchNorm
 
 from ..builder import BACKBONES
 from .base_backbone import BaseBackbone
-from ..utils.involution import involution
+from ..utils.involution_cuda import involution
 
 
 class BasicBlock(nn.Module):

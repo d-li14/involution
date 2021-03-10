@@ -3,7 +3,7 @@ import torch.nn.functional as F
 from mmcv.cnn import ConvModule, xavier_init
 
 from ..builder import NECKS
-from ..utils.involution import involution
+from ..utils.involution_cuda import involution
 
 
 @NECKS.register_module()
