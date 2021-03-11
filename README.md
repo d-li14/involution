@@ -1,12 +1,35 @@
 # involution
 
+Official implementation of a neural operator as described in [Involution: Inverting the Inherence of Convolution for Visual Recognition]() (CVPR'21)
+
+By [Duo Li](https://duoli.org/), [Jie Hu](https://github.com/hujie-frank), [Changhu Wang](https://scholar.google.com/citations?user=DsVZkjAAAAAJ), [Xiangtai Li](https://github.com/lxtGH), Qi She, Lei Zhu, [Tong Zhang](http://tongzhang-ml.org/), and [Qifeng Chen](https://cqf.io/)
+
+<p align="center"><img src="fig/involution.png" width="600" /></p>
+
 ## Getting Started
 
 This repository is fully built upon the [OpenMMLab](https://openmmlab.com/) toolkits. For each individual task, the config and model files follow the same directory organization as [mmcls](https://github.com/open-mmlab/mmclassification), [mmdet](https://github.com/open-mmlab/mmdetection), and [mmseg](https://github.com/open-mmlab/mmsegmentation) respectively, so just copy-and-paste them to the corresponding locations to get started.
 
+For example, in terms of evaluating detectors
+```shell
+git clone https://github.com/open-mmlab/mmdetection # and install
+
+cp det/mmdet/models/backbones/* mmdetection/mmdet/models/backbones
+cp det/mmdet/models/necks/* mmdetection/mmdet/models/necks
+cp det/mmdet/models/utils/* mmdetection/mmdet/models/utils
+
+cp det/configs/_base_/models/* mmdetection/mmdet/configs/_base_/models
+cp det/configs/_base_/schedules/* mmdetection/mmdet/configs/_base_/schedules
+cp det/configs/involution mmdetection/mmdet/configs -r
+
+cd mmdetection
+# evaluate checkpoints
+bash tools/dist_test.sh ${CONFIG_FILE} ${CHECKPOINT_FILE} ${GPU_NUM} [--out ${RESULT_FILE}] [--eval ${EVAL_METRICS}]
+```
+
 For more detailed guidance, please refer to the original [mmcls](https://github.com/open-mmlab/mmclassification), [mmdet](https://github.com/open-mmlab/mmdetection), and [mmseg](https://github.com/open-mmlab/mmsegmentation) tutorials.
 
-Currently, we provide an implementation of involuton OP based on pure PyTorch APIs and we are working on customized CUDA kernels that would bring about further acceleration. Any contribution from the community regarding this is greatly welcomed!
+Currently, we provide an memory-efficient implementation of the involuton operator based on [CuPy](https://cupy.dev/). Please install this library in advance. A customized CUDA kernel would bring about further acceleration on the hardware. Any contribution from the community regarding this is welcomed!
 
 ## Model Zoo
 
@@ -53,4 +76,15 @@ Before finetuning on the following downstream tasks, download the ImageNet pre-t
 | FPN    | RedNet-50     |  involution | 512x1024  |   80000 | 16.4<sub>(42.5%&#8595;)</sub> | 205.2<sub>(43.4%&#8595;)</sub> | 79.1<sub>(4.7&#8593;)</sub> | [config](https://github.com/d-li14/involution/blob/main/seg/configs/involution/fpn_red50_neck_512x1024_80k_cityscapes.py) | [model](https://hkustconnect-my.sharepoint.com/:u:/g/personal/dlibh_connect_ust_hk/EZzDyESh0ElFp2pIFL1xN70BAj1EyvhFyqi0g7Mp1OZxog?e=F7kZYH) &#124; [log](https://hkustconnect-my.sharepoint.com/:u:/g/personal/dlibh_connect_ust_hk/EXcP_3ujO_1Juj8ap7rqDJ8BWZDCyJL86BWjeZiJ_FfLOw?e=47lvtq) |
 | UPerNet| RedNet-50     | convolution | 512x1024  |   80000 | 56.4<sub>(15.1%&#8595;)</sub> | 1825.6<sub>(3.6%&#8595;)</sub> | 80.6<sub>(2.4&#8593;)</sub> | [config](https://github.com/d-li14/involution/blob/main/seg/configs/involution/upernet_red50_512x1024_80k_cityscapes.py) | [model](https://hkustconnect-my.sharepoint.com/:u:/g/personal/dlibh_connect_ust_hk/Eb8-frsvSuNAm7qQ6-H2DtEBdACuf-mUOBhvE3YIOiobmA?e=Ibb2cN) &#124; [log](https://hkustconnect-my.sharepoint.com/:u:/g/personal/dlibh_connect_ust_hk/EWhyFAZpxfRBoFi1myoT-RMB6-HeaP7NjSv88YQve4bZkg?e=wC8ccl) |
 
+
 ## Citation
+If you find our work useful in your research, please cite:
+```
+@InProceedings{Li_2021_CVPR,
+author = {Li, Duo and Hu, Jie and Wang, Changhu and Li, Xiangtai and She, Qi and Zhu, Lei and Zhang, Tong and Chen, Qifeng},
+title = {Dynamic Hierarchical Mimicking Towards Consistent Optimization Objectives},
+booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+month = {June},
+year = {2021}
+}
+```
