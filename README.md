@@ -1,6 +1,6 @@
 # involution
 
-Official implementation of a neural operator as described in [Involution: Inverting the Inherence of Convolution for Visual Recognition]() (CVPR'21)
+Official implementation of a neural operator as described in [Involution: Inverting the Inherence of Convolution for Visual Recognition](https://arxiv.org/abs/2103.06255) (CVPR'21)
 
 By [Duo Li](https://duoli.org/), [Jie Hu](https://github.com/hujie-frank), [Changhu Wang](https://scholar.google.com/citations?user=DsVZkjAAAAAJ), [Xiangtai Li](https://github.com/lxtGH), [Qi She](https://scholar.google.com/citations?user=iHoGTt4AAAAJ), Lei Zhu, [Tong Zhang](http://tongzhang-ml.org/), and [Qifeng Chen](https://cqf.io/)
 
