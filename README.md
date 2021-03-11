@@ -4,6 +4,8 @@ Official implementation of a neural operator as described in [Involution: Invert
 
 By [Duo Li](https://duoli.org/), [Jie Hu](https://github.com/hujie-frank), [Changhu Wang](https://scholar.google.com/citations?user=DsVZkjAAAAAJ), [Xiangtai Li](https://github.com/lxtGH), Qi She, Lei Zhu, [Tong Zhang](http://tongzhang-ml.org/), and [Qifeng Chen](https://cqf.io/)
 
+`involution` bridges `convolution` and `self-attention` in design, while being more efficient and effective than `convolution`, simpler than `self-attention` in form.
+
 <p align="center"><img src="fig/involution.png" width="600" /></p>
 
 ## Getting Started
