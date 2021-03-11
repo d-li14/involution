@@ -18,16 +18,18 @@ For example, in terms of evaluating detectors
 ```shell
 git clone https://github.com/open-mmlab/mmdetection # and install
 
+# copy model files
 cp det/mmdet/models/backbones/* mmdetection/mmdet/models/backbones
 cp det/mmdet/models/necks/* mmdetection/mmdet/models/necks
 cp det/mmdet/models/utils/* mmdetection/mmdet/models/utils
 
+# copy config files
 cp det/configs/_base_/models/* mmdetection/mmdet/configs/_base_/models
 cp det/configs/_base_/schedules/* mmdetection/mmdet/configs/_base_/schedules
 cp det/configs/involution mmdetection/mmdet/configs -r
 
-cd mmdetection
 # evaluate checkpoints
+cd mmdetection
 bash tools/dist_test.sh ${CONFIG_FILE} ${CHECKPOINT_FILE} ${GPU_NUM} [--out ${RESULT_FILE}] [--eval ${EVAL_METRICS}]
 ```
 
