@@ -2,11 +2,11 @@
 
 Official implementation of a neural operator as described in [Involution: Inverting the Inherence of Convolution for Visual Recognition]() (CVPR'21)
 
-By [Duo Li](https://duoli.org/), [Jie Hu](https://github.com/hujie-frank), [Changhu Wang](https://scholar.google.com/citations?user=DsVZkjAAAAAJ), [Xiangtai Li](https://github.com/lxtGH), Qi She, Lei Zhu, [Tong Zhang](http://tongzhang-ml.org/), and [Qifeng Chen](https://cqf.io/)
+By [Duo Li](https://duoli.org/), [Jie Hu](https://github.com/hujie-frank), [Changhu Wang](https://scholar.google.com/citations?user=DsVZkjAAAAAJ), [Xiangtai Li](https://github.com/lxtGH), [Qi She](https://scholar.google.com/citations?user=iHoGTt4AAAAJ), Lei Zhu, [Tong Zhang](http://tongzhang-ml.org/), and [Qifeng Chen](https://cqf.io/)
 
 <p align="center"><img src="fig/involution.png" width="600" /></p>
 
-**TL; DR.**`involution` is a general-purpose neural primitive that is versatile for a spectrum of deep learning models on different vision tasks. `involution` bridges `convolution` and `self-attention` in design, while being more efficient and effective than `convolution`, simpler than `self-attention` in form. 
+**TL; DR.** `involution` is a general-purpose neural primitive that is versatile for a spectrum of deep learning models on different vision tasks. `involution` bridges `convolution` and `self-attention` in design, while being more efficient and effective than `convolution`, simpler than `self-attention` in form. 
 
 ## Getting Started
 
@@ -84,7 +84,7 @@ If you find our work useful in your research, please cite:
 ```
 @InProceedings{Li_2021_CVPR,
 author = {Li, Duo and Hu, Jie and Wang, Changhu and Li, Xiangtai and She, Qi and Zhu, Lei and Zhang, Tong and Chen, Qifeng},
-title = {Dynamic Hierarchical Mimicking Towards Consistent Optimization Objectives},
+title = {Involution: Inverting the Inherence of Convolution for Visual Recognition},
 booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
 month = {June},
 year = {2021}
