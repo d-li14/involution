@@ -86,7 +86,9 @@ __global__ void involution_backward_grad_input_kernel(
     const int w = index % ${bottom_width};
     const int g = c / (${channels} / ${groups});
     ${Dtype} value = 0;
+    #pragma unroll
     for (int kh = 0; kh < ${kernel_h}; ++kh) {
+      #pragma unroll
       for (int kw = 0; kw < ${kernel_w}; ++kw) {
         const int h_out_s = h + ${pad_h} - kh * ${dilation_h};
         const int w_out_s = w + ${pad_w} - kw * ${dilation_w};
@@ -127,6 +129,7 @@ __global__ void involution_backward_grad_weight_kernel(
       const int g = (index / ${kernel_h} / ${kernel_w} / ${top_height} / ${top_width}) % ${groups};
       const int n = (index / ${groups} / ${kernel_h} / ${kernel_w} / ${top_height} / ${top_width}) % ${num};
       ${Dtype} value = 0;
+      #pragma unroll
       for (int c = g * (${channels} / ${groups}); c < (g + 1) * (${channels} / ${groups}); ++c) {
         const int top_offset = ((n * ${channels} + c) * ${top_height} + h)
               * ${top_width} + w;

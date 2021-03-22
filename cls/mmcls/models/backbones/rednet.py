@@ -9,118 +9,6 @@ from .base_backbone import BaseBackbone
 from ..utils.involution_cuda import involution
 
 
-class BasicBlock(nn.Module):
-    """BasicBlock for ResNet.
-
-    Args:
-        in_channels (int): Input channels of this block.
-        out_channels (int): Output channels of this block.
-        expansion (int): The ratio of ``out_channels/mid_channels`` where
-            ``mid_channels`` is the output channels of conv1. This is a
-            reserved argument in BasicBlock and should always be 1. Default: 1.
-        stride (int): stride of the block. Default: 1
-        dilation (int): dilation of convolution. Default: 1
-        downsample (nn.Module): downsample operation on identity branch.
-            Default: None.
-        style (str): `pytorch` or `caffe`. It is unused and reserved for
-            unified API with Bottleneck.
-        with_cp (bool): Use checkpoint or not. Using checkpoint will save some
-            memory while slowing down the training speed.
-        conv_cfg (dict): dictionary to construct and config conv layer.
-            Default: None
-        norm_cfg (dict): dictionary to construct and config norm layer.
-            Default: dict(type='BN')
-    """
-
-    def __init__(self,
-                 in_channels,
-                 out_channels,
-                 expansion=1,
-                 stride=1,
-                 dilation=1,
-                 downsample=None,
-                 style='pytorch',
-                 with_cp=False,
-                 conv_cfg=None,
-                 norm_cfg=dict(type='BN')):
-        super(BasicBlock, self).__init__()
-        self.in_channels = in_channels
-        self.out_channels = out_channels
-        self.expansion = expansion
-        assert self.expansion == 1
-        assert out_channels % expansion == 0
-        self.mid_channels = out_channels // expansion
-        self.stride = stride
-        self.dilation = dilation
-        self.style = style
-        self.with_cp = with_cp
-        self.conv_cfg = conv_cfg
-        self.norm_cfg = norm_cfg
-
-        self.norm1_name, norm1 = build_norm_layer(
-            norm_cfg, self.mid_channels, postfix=1)
-        self.norm2_name, norm2 = build_norm_layer(
-            norm_cfg, out_channels, postfix=2)
-
-        self.conv1 = build_conv_layer(
-            conv_cfg,
-            in_channels,
-            self.mid_channels,
-            3,
-            stride=stride,
-            padding=dilation,
-            dilation=dilation,
-            bias=False)
-        self.add_module(self.norm1_name, norm1)
-        self.conv2 = build_conv_layer(
-            conv_cfg,
-            self.mid_channels,
-            out_channels,
-            3,
-            padding=1,
-            bias=False)
-        self.add_module(self.norm2_name, norm2)
-
-        self.relu = nn.ReLU(inplace=True)
-        self.downsample = downsample
-
-    @property
-    def norm1(self):
-        return getattr(self, self.norm1_name)
-
-    @property
-    def norm2(self):
-        return getattr(self, self.norm2_name)
-
-    def forward(self, x):
-
-        def _inner_forward(x):
-            identity = x
-
-            out = self.conv1(x)
-            out = self.norm1(out)
-            out = self.relu(out)
-
-            out = self.conv2(out)
-            out = self.norm2(out)
-
-            if self.downsample is not None:
-                identity = self.downsample(x)
-
-            out += identity
-
-            return out
-
-        if self.with_cp and x.requires_grad:
-            out = cp.checkpoint(_inner_forward, x)
-        else:
-            out = _inner_forward(x)
-
-        out = self.relu(out)
-
-        return out
-
-
 class Bottleneck(nn.Module):
     """Bottleneck block for ResNet.
 
@@ -192,15 +80,6 @@ class Bottleneck(nn.Module):
             stride=self.conv1_stride,
             bias=False)
         self.add_module(self.norm1_name, norm1)
-        #self.conv2 = build_conv_layer(
-        #    conv_cfg,
-        #    self.mid_channels,
-        #    self.mid_channels,
-        #    kernel_size=3,
-        #    stride=self.conv2_stride,
-        #    padding=dilation,
-        #    dilation=dilation,
-        #    bias=False)
         self.conv2 = involution(self.mid_channels, 7, self.conv2_stride)
 
         self.add_module(self.norm2_name, norm2)
@@ -283,8 +162,6 @@ def get_expansion(block, expansion=None):
     elif expansion is None:
         if hasattr(block, 'expansion'):
             expansion = block.expansion
-        elif issubclass(block, BasicBlock):
-            expansion = 1
         elif issubclass(block, Bottleneck):
             expansion = 4
         else:
@@ -436,8 +313,6 @@ class RedNet(BaseBackbone):
     """
 
     arch_settings = {
-        18: (BasicBlock, (2, 2, 2, 2)),
-        34: (BasicBlock, (3, 4, 6, 3)),
         26: (Bottleneck, (1, 2, 4, 1)),
         38: (Bottleneck, (2, 3, 5, 2)),
         50: (Bottleneck, (3, 4, 6, 3)),
@@ -537,15 +412,6 @@ class RedNet(BaseBackbone):
                 conv_cfg=self.conv_cfg,
                 norm_cfg=self.norm_cfg,
                 inplace=True),
-            #ConvModule(
-            #    stem_channels // 2,
-            #    stem_channels // 2,
-            #    kernel_size=3,
-            #    stride=1,
-            #    padding=1,
-            #    conv_cfg=self.conv_cfg,
-            #    norm_cfg=self.norm_cfg,
-            #    inplace=True),
             involution(stem_channels // 2, 3, 1),
             nn.BatchNorm2d(stem_channels // 2),
             nn.ReLU(inplace=True),
@@ -562,15 +428,9 @@ class RedNet(BaseBackbone):
 
     def _freeze_stages(self):
         if self.frozen_stages >= 0:
-            if self.deep_stem:
-                self.stem.eval()
-                for param in self.stem.parameters():
-                    param.requires_grad = False
-            else:
-                self.norm1.eval()
-                for m in [self.conv1, self.norm1]:
-                    for param in m.parameters():
-                        param.requires_grad = False
+            self.stem.eval()
+            for param in self.stem.parameters():
+                param.requires_grad = False
 
         for i in range(1, self.frozen_stages + 1):
             m = getattr(self, f'layer{i}')
@@ -591,8 +451,6 @@ class RedNet(BaseBackbone):
                 for m in self.modules():
                     if isinstance(m, Bottleneck):
                         constant_init(m.norm3, 0)
-                    elif isinstance(m, BasicBlock):
-                        constant_init(m.norm2, 0)
 
     def forward(self, x):
         x = self.stem(x)
