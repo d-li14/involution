@@ -2,13 +2,24 @@
 
 Official implementation of a neural operator as described in [Involution: Inverting the Inherence of Convolution for Visual Recognition](https://arxiv.org/abs/2103.06255) (CVPR'21)
 
-By [Duo Li](https://duoli.org/), [Jie Hu](https://github.com/hujie-frank), [Changhu Wang](https://scholar.google.com/citations?user=DsVZkjAAAAAJ), [Xiangtai Li](https://github.com/lxtGH), [Qi She](https://scholar.google.com/citations?user=iHoGTt4AAAAJ), Lei Zhu, [Tong Zhang](http://tongzhang-ml.org/), and [Qifeng Chen](https://cqf.io/)
+By [Duo Li](https://duoli.org/), [Jie Hu](https://github.com/hujie-frank), [Changhu Wang](https://scholar.google.com/citations?user=DsVZkjAAAAAJ), [Xiangtai Li](https://github.com/lxtGH), [Qi She](https://scholar.google.com/citations?user=iHoGTt4AAAAJ), [Lei Zhu](https://github.com/zh460045050), [Tong Zhang](http://tongzhang-ml.org/), and [Qifeng Chen](https://cqf.io/)
 
 <p align="center"><img src="fig/involution.png" width="500" /></p>
 
 **TL; DR.** `involution` is a general-purpose neural primitive that is versatile for a spectrum of deep learning models on different vision tasks. `involution` bridges `convolution` and `self-attention` in design, while being more efficient and effective than `convolution`, simpler than `self-attention` in form. 
 
 <p align="center"><img src="fig/complexity.png" width="400" /><img src="fig/parameter.png" width="400" /></p>
+
+If you find our work useful in your research, please cite:
+```
+@InProceedings{Li_2021_CVPR,
+    author = {Li, Duo and Hu, Jie and Wang, Changhu and Li, Xiangtai and She, Qi and Zhu, Lei and Zhang, Tong and Chen, Qifeng},
+    title = {Involution: Inverting the Inherence of Convolution for Visual Recognition},
+    booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    month = {June},
+    year = {2021}
+}
+```
 
 ## Getting Started
 
@@ -87,16 +98,3 @@ Before finetuning on the following downstream tasks, download the ImageNet pre-t
 | FPN    | RedNet-50     | convolution | 512x1024  |   80000 | 18.5<sub>(35.1%&#8595;)</sub> | 293.9<sub>(19.0%&#8595;)</sub> | 78.0<sub>(3.6&#8593;)</sub> | [config](https://github.com/d-li14/involution/blob/main/seg/configs/involution/fpn_red50_512x1024_80k_cityscapes.py) | [model](https://hkustconnect-my.sharepoint.com/:u:/g/personal/dlibh_connect_ust_hk/EYstjiI28SJPohJE54wapFUBW5Wc95Di2Rsh0vf6K79vPw?e=lOvbkZ) &#124; [log](https://hkustconnect-my.sharepoint.com/:u:/g/personal/dlibh_connect_ust_hk/EXdupIgFuAlFuH854wThyXcBQTyL7YhK3wPYcR98rw7PJg?e=MyXx2w) |
 | FPN    | RedNet-50     |  involution | 512x1024  |   80000 | 16.4<sub>(42.5%&#8595;)</sub> | 205.2<sub>(43.4%&#8595;)</sub> | 79.1<sub>(4.7&#8593;)</sub> | [config](https://github.com/d-li14/involution/blob/main/seg/configs/involution/fpn_red50_neck_512x1024_80k_cityscapes.py) | [model](https://hkustconnect-my.sharepoint.com/:u:/g/personal/dlibh_connect_ust_hk/EZzDyESh0ElFp2pIFL1xN70BAj1EyvhFyqi0g7Mp1OZxog?e=F7kZYH) &#124; [log](https://hkustconnect-my.sharepoint.com/:u:/g/personal/dlibh_connect_ust_hk/EXcP_3ujO_1Juj8ap7rqDJ8BWZDCyJL86BWjeZiJ_FfLOw?e=47lvtq) |
 | UPerNet| RedNet-50     | convolution | 512x1024  |   80000 | 56.4<sub>(15.1%&#8595;)</sub> | 1825.6<sub>(3.6%&#8595;)</sub> | 80.6<sub>(2.4&#8593;)</sub> | [config](https://github.com/d-li14/involution/blob/main/seg/configs/involution/upernet_red50_512x1024_80k_cityscapes.py) | [model](https://hkustconnect-my.sharepoint.com/:u:/g/personal/dlibh_connect_ust_hk/Eb8-frsvSuNAm7qQ6-H2DtEBdACuf-mUOBhvE3YIOiobmA?e=Ibb2cN) &#124; [log](https://hkustconnect-my.sharepoint.com/:u:/g/personal/dlibh_connect_ust_hk/EWhyFAZpxfRBoFi1myoT-RMB6-HeaP7NjSv88YQve4bZkg?e=wC8ccl) |
-
-
-## Citation
-If you find our work useful in your research, please cite:
-```
-@InProceedings{Li_2021_CVPR,
-author = {Li, Duo and Hu, Jie and Wang, Changhu and Li, Xiangtai and She, Qi and Zhu, Lei and Zhang, Tong and Chen, Qifeng},
-title = {Involution: Inverting the Inherence of Convolution for Visual Recognition},
-booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-month = {June},
-year = {2021}
-}
-```
