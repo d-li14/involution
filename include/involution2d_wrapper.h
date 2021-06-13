@@ -5,7 +5,10 @@
 
 #include "autocast.h"
 #include "involution2d_cpu.h"
-#include "involution2d_cuda.cuh"
+
+#ifdef USE_CUDA
+#   include "involution2d_cuda.cuh"
+#endif
 
 namespace involution {
 
@@ -137,6 +140,8 @@ at::Tensor involution2d_autograd(
 
 } // namespace cpu
 
+#ifdef USE_CUDA
+
 namespace cuda {
 
 class Involution2dFunctionCUDA : public torch::autograd::Function<Involution2dFunctionCUDA>
@@ -208,5 +213,7 @@ at::Tensor involution2d_autograd(
 }
 
 } // namespace cuda
+
+#endif
 
 } // namespace involution

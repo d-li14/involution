@@ -15,12 +15,14 @@ TORCH_LIBRARY_IMPL(involution, CPU, m) {
     m.impl("_involution2d_backward", involution::cpu::involution2d_backward);
 }
 
+#ifdef USE_CUDA
 TORCH_LIBRARY_IMPL(involution, CUDA, m) {
     m.impl("involution2d", involution::cuda::involution2d_forward);
     m.impl("_involution2d_backward_grad_input", involution::cuda::involution2d_backward_grad_input);
     m.impl("_involution2d_backward_grad_weight", involution::cuda::involution2d_backward_grad_weight);
     m.impl("_involution2d_backward", involution::cuda::involution2d_backward);
 }
+#endif
 
 // TORCH_LIBRARY_IMPL(involution, Autocast, m) {
 //     m.impl("involution2d", involution2d_autocast);
@@ -30,6 +32,8 @@ TORCH_LIBRARY_IMPL(involution, AutogradCPU, m) {
     m.impl("involution2d", involution::cpu::involution2d_autograd);
 }
 
+#ifdef USE_CUDA
 TORCH_LIBRARY_IMPL(involution, AutogradCUDA, m) {
     m.impl("involution2d", involution::cuda::involution2d_autograd);
 }
+#endif
