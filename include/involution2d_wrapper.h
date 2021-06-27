@@ -91,8 +91,6 @@ class Involution2dFunctionCPU : public torch::autograd::Function<Involution2dFun
         ctx->saved_data["groups"] = groups;
         ctx->save_for_backward({input, weight});
 
-        at::AutoNonVariableTypeMode g;
-
         auto output = involution2d_forward(input, weight, kernel_size, stride, padding, dilation, groups);
 
         return {output};
@@ -164,8 +162,6 @@ class Involution2dFunctionCUDA : public torch::autograd::Function<Involution2dFu
         ctx->saved_data["dilation"] = dilation;
         ctx->saved_data["groups"] = groups;
         ctx->save_for_backward({input, weight});
-
-        at::AutoNonVariableTypeMode g;
 
         auto output = involution2d_forward(input, weight, kernel_size, stride, padding, dilation, groups);
 
