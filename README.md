@@ -32,11 +32,11 @@ if torch.cuda.is_available():
 else:
     device = torch.device("cpu")
 
-inv2d : nn.Module = Involution2d(in_channels=4, out_channels=8).to(device)
+inv2d: nn.Module = Involution2d(in_channels=4, out_channels=8).to(device)
 
-x : torch.Tensor = torch.rand(2, 4, 8, 8).to(device)
+x: torch.Tensor = torch.rand(2, 4, 8, 8).to(device)
 
-y : torch.Tensor = inv2d(x)
+y: torch.Tensor = inv2d(x)
 ```
 
 The 2D involution takes the following parameters:
