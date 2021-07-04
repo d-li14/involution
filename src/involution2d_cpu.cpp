@@ -25,7 +25,7 @@ static void involution2d_forward_frame(
     auto weight_data_a = weight_data.accessor<scalar_t, 6>();
     auto* out_data_p = out_data.data_ptr<scalar_t>();
 
-    #pragma omp parallel for private(idx)
+    #pragma omp parallel for
     for (int64_t idx = 0l; idx < num_elements; idx++) {
         const int64_t w = idx % out_width;
         const int64_t h = (idx / out_width) % out_height;
@@ -57,10 +57,10 @@ static void involution2d_forward_frame(
 at::Tensor involution2d_forward(
     const at::Tensor& input,
     const at::Tensor& weight,
-    const at::IntArrayRef& kernel_size,
-    const at::IntArrayRef& stride,
-    const at::IntArrayRef& padding,
-    const at::IntArrayRef& dilation,
+    const std::vector<int64_t>& kernel_size,
+    const std::vector<int64_t>& stride,
+    const std::vector<int64_t>& padding,
+    const std::vector<int64_t>& dilation,
     const int64_t groups
 ) {
     AT_ASSERTM(input.device().is_cpu(), "\"input\" must be a CPU tensor.");
@@ -131,7 +131,7 @@ static void involution2d_backward_grad_input_frame(
     auto weight_data_a = weight_data.accessor<scalar_t, 6>();
     auto* in_diff_p = in_diff.data_ptr<scalar_t>();
 
-    #pragma omp parallel for private(idx)
+    #pragma omp parallel for
     for (int64_t idx = 0l; idx < num_elements; idx++) {
         const int64_t w = idx % in_width;
         const int64_t h = (idx / in_width) % in_height;
@@ -166,11 +166,11 @@ static void involution2d_backward_grad_input_frame(
 at::Tensor involution2d_backward_grad_input(
     const at::Tensor& grad,
     const at::Tensor& weight,
-    const at::IntArrayRef& input_shape,
-    const at::IntArrayRef& kernel_size,
-    const at::IntArrayRef& stride,
-    const at::IntArrayRef& padding,
-    const at::IntArrayRef& dilation,
+    const std::vector<int64_t>& input_shape,
+    const std::vector<int64_t>& kernel_size,
+    const std::vector<int64_t>& stride,
+    const std::vector<int64_t>& padding,
+    const std::vector<int64_t>& dilation,
     const int64_t groups
 ) {
     AT_ASSERTM(grad.device().is_cpu(), "\"grad\" must be a CPU tensor.");
@@ -233,7 +233,7 @@ static void involution2d_backward_grad_weight_frame(
     auto in_data_a = in_data.accessor<scalar_t, 4>();
     auto* weight_diff_p = weight_diff.data_ptr<scalar_t>();
 
-    #pragma omp parallel for private(idx)
+    #pragma omp parallel for
     for (int64_t idx = 0l; idx < num_elements; idx++) {
         const int64_t w = idx % out_width;
         const int64_t h = (idx / out_width) % out_height;
@@ -267,11 +267,11 @@ static void involution2d_backward_grad_weight_frame(
 at::Tensor involution2d_backward_grad_weight(
     const at::Tensor& grad,
     const at::Tensor& input,
-    const at::IntArrayRef& weight_shape,
-    const at::IntArrayRef& kernel_size,
-    const at::IntArrayRef& stride,
-    const at::IntArrayRef& padding,
-    const at::IntArrayRef& dilation,
+    const std::vector<int64_t>& weight_shape,
+    const std::vector<int64_t>& kernel_size,
+    const std::vector<int64_t>& stride,
+    const std::vector<int64_t>& padding,
+    const std::vector<int64_t>& dilation,
     const int64_t groups
 ) {
     AT_ASSERTM(grad.device().is_cpu(), "\"grad\" must be a CPU tensor.");
@@ -313,27 +313,35 @@ std::vector<at::Tensor> involution2d_backward(
     const at::Tensor& grad,
     const at::Tensor& weight,
     const at::Tensor& input,
-    const at::IntArrayRef& kernel_size,
-    const at::IntArrayRef& stride,
-    const at::IntArrayRef& padding,
-    const at::IntArrayRef& dilation,
+    const std::vector<int64_t>& kernel_size,
+    const std::vector<int64_t>& stride,
+    const std::vector<int64_t>& padding,
+    const std::vector<int64_t>& dilation,
     const int64_t groups
 ) {
+    auto input_sizes = input.sizes();
+    std::vector<int64_t> input_size;
+    std::copy(input_sizes.begin(), input_sizes.end(), std::back_inserter(input_size));
+
     auto grad_input = involution2d_backward_grad_input(
         grad,
         weight,
-        input.sizes(),
+        input_size,
         kernel_size,
         stride,
         padding,
         dilation,
         groups
     );
+
+    auto weight_sizes = weight.sizes();
+    std::vector<int64_t> weight_size;
+    std::copy(weight_sizes.begin(), weight_sizes.end(), std::back_inserter(weight_size));
 
     auto grad_weight = involution2d_backward_grad_weight(
         grad,
         input,
-        weight.sizes(),
+        weight_size,
         kernel_size,
         stride,
         padding,
@@ -341,6 +349,9 @@ std::vector<at::Tensor> involution2d_backward(
         groups
     );
 
+    // std::vector<at::Tensor> output{grad_input, grad_weight};
+
+    // return output;
     return {grad_input, grad_weight};
 }
 

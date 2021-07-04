@@ -15,9 +15,9 @@ namespace involution {
 at::Tensor involution2d(
     const at::Tensor& input,
     const at::Tensor& weight,
-    const at::IntArrayRef& stride,
-    const at::IntArrayRef& padding,
-    const at::IntArrayRef& dilation
+    const std::vector<int64_t>& stride,
+    const std::vector<int64_t>& padding,
+    const std::vector<int64_t>& dilation
 ) {
     static auto op = at::Dispatcher::singleton()
         .findSchemaOrThrow("involution::involution2d", "")
@@ -29,9 +29,9 @@ at::Tensor involution2d(
 at::Tensor involution2d_autocast(
     const at::Tensor& input,
     const at::Tensor& weight,
-    const at::IntArrayRef& stride,
-    const at::IntArrayRef& padding,
-    const at::IntArrayRef& dilation
+    const std::vector<int64_t>& stride,
+    const std::vector<int64_t>& padding,
+    const std::vector<int64_t>& dilation
 ) {
     c10::impl::ExcludeDispatchKeyGuard no_autocast(c10::DispatchKey::Autocast);
     return involution2d(autocast::_cast(at::kFloat, input), autocast::_cast(at::kFloat, weight), stride, padding, dilation)
@@ -41,10 +41,10 @@ at::Tensor involution2d_autocast(
 at::Tensor _involution2d_backward_grad_input(
     const at::Tensor& grad,
     const at::Tensor& weight,
-    const at::IntArrayRef& input_shape,
-    const at::IntArrayRef& stride,
-    const at::IntArrayRef& padding,
-    const at::IntArrayRef& dilation
+    const std::vector<int64_t>& input_shape,
+    const std::vector<int64_t>& stride,
+    const std::vector<int64_t>& padding,
+    const std::vector<int64_t>& dilation
 ) {
     static auto op = at::Dispatcher::singleton()
         .findSchemaOrThrow("involution2d::_involution2d_backward_grad_input", "")
@@ -56,10 +56,10 @@ at::Tensor _involution2d_backward_grad_input(
 at::Tensor _involution2d_backward_grad_weight(
     const at::Tensor& grad,
     const at::Tensor& input,
-    const at::IntArrayRef& weight_shape,
-    const at::IntArrayRef& stride,
-    const at::IntArrayRef& padding,
-    const at::IntArrayRef& dilation
+    const std::vector<int64_t>& weight_shape,
+    const std::vector<int64_t>& stride,
+    const std::vector<int64_t>& padding,
+    const std::vector<int64_t>& dilation
 ) {
     static auto op = at::Dispatcher::singleton()
         .findSchemaOrThrow("involution2d::_involution2d_backward_grad_weight", "")
@@ -78,10 +78,10 @@ class Involution2dFunctionCPU : public torch::autograd::Function<Involution2dFun
         torch::autograd::AutogradContext* ctx,
         const torch::autograd::Variable& input,
         const torch::autograd::Variable& weight,
-        const at::IntArrayRef& kernel_size,
-        const at::IntArrayRef& stride,
-        const at::IntArrayRef& padding,
-        const at::IntArrayRef& dilation,
+        const std::vector<int64_t>& kernel_size,
+        const std::vector<int64_t>& stride,
+        const std::vector<int64_t>& padding,
+        const std::vector<int64_t>& dilation,
         const int64_t groups
     ) {
         ctx->saved_data["kernel_size"] = kernel_size;
@@ -127,10 +127,10 @@ class Involution2dFunctionCPU : public torch::autograd::Function<Involution2dFun
 at::Tensor involution2d_autograd(
     const torch::autograd::Variable& input,
     const torch::autograd::Variable& weight,
-    const at::IntArrayRef& kernel_size,
-    const at::IntArrayRef& stride,
-    const at::IntArrayRef& padding,
-    const at::IntArrayRef& dilation,
+    const std::vector<int64_t>& kernel_size,
+    const std::vector<int64_t>& stride,
+    const std::vector<int64_t>& padding,
+    const std::vector<int64_t>& dilation,
     const int64_t groups
 ) {
     return Involution2dFunctionCPU::apply(input, weight, kernel_size, stride, padding, dilation, groups)[0];
@@ -150,10 +150,10 @@ class Involution2dFunctionCUDA : public torch::autograd::Function<Involution2dFu
         torch::autograd::AutogradContext* ctx,
         const torch::autograd::Variable& input,
         const torch::autograd::Variable& weight,
-        const at::IntArrayRef& kernel_size,
-        const at::IntArrayRef& stride,
-        const at::IntArrayRef& padding,
-        const at::IntArrayRef& dilation,
+        const std::vector<int64_t>& kernel_size,
+        const std::vector<int64_t>& stride,
+        const std::vector<int64_t>& padding,
+        const std::vector<int64_t>& dilation,
         const int64_t groups
     ) {
         ctx->saved_data["kernel_size"] = kernel_size;
@@ -199,10 +199,10 @@ class Involution2dFunctionCUDA : public torch::autograd::Function<Involution2dFu
 at::Tensor involution2d_autograd(
     const torch::autograd::Variable& input,
     const torch::autograd::Variable& weight,
-    const at::IntArrayRef& kernel_size,
-    const at::IntArrayRef& stride,
-    const at::IntArrayRef& padding,
-    const at::IntArrayRef& dilation,
+    const std::vector<int64_t>& kernel_size,
+    const std::vector<int64_t>& stride,
+    const std::vector<int64_t>& padding,
+    const std::vector<int64_t>& dilation,
     const int64_t groups
 ) {
     return Involution2dFunctionCUDA::apply(input, weight, kernel_size, stride, padding, dilation, groups)[0];
