@@ -6,16 +6,22 @@ Unofficial PyTorch reimplemention of the paper [Involution: Inverting the Inhere
 
 ## Installation
 
-- CUDA
+- Default
 
     ```bash
     pip install git+https://github.com/shikishima-TasakiLab/Involution-PyTorch
     ```
 
-- CPU only
+- No CUDA
 
     ```bash
     USE_CUDA=0 pip install git+https://github.com/shikishima-TasakiLab/Involution-PyTorch
+    ```
+
+- No OpenMP
+
+    ```bash
+    USE_OPENMP=0 pip install git+https://github.com/shikishima-TasakiLab/Involution-PyTorch
     ```
 
 ## Example Usage

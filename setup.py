@@ -4,10 +4,16 @@ from setuptools import setup, find_packages
 from torch.utils.cpp_extension import CppExtension, CUDAExtension, BuildExtension
 
 INCLUDE_DIR = join(dirname(abspath(__file__)), 'include')
+EXTRA_COMPILE_ARGS = ['-O3']
 
 EXTENSION = []
 
+if os.getenv('USE_OPENMP', '1') == '1':
+    EXTRA_COMPILE_ARGS.append('-fopenmp')
+
 if os.getenv('USE_CUDA', '1') == '1':
+    EXTRA_COMPILE_ARGS.append('-DUSE_CUDA')
+
     EXTENSION.append(
         CUDAExtension(
             name='involution',
@@ -20,7 +26,7 @@ if os.getenv('USE_CUDA', '1') == '1':
                 INCLUDE_DIR
             ],
             extra_compile_args={
-                'cxx': ['-DUSE_CUDA', '-O3'],
+                'cxx': EXTRA_COMPILE_ARGS,
                 'nvcc': ['-O3'],
             }
         )
@@ -36,7 +42,7 @@ else:
             include_dirs=[
                 INCLUDE_DIR
             ],
-            extra_compile_args=['-O3']
+            extra_compile_args=EXTRA_COMPILE_ARGS
         )
     )
 

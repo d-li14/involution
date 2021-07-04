@@ -15,32 +15,32 @@ namespace cuda {
 at::Tensor involution2d_forward(
     const at::Tensor& input,
     const at::Tensor& weight,
-    const at::IntArrayRef& kernel_size,
-    const at::IntArrayRef& stride,
-    const at::IntArrayRef& padding,
-    const at::IntArrayRef& dilation,
+    const std::vector<int64_t>& kernel_size,
+    const std::vector<int64_t>& stride,
+    const std::vector<int64_t>& padding,
+    const std::vector<int64_t>& dilation,
     const int64_t groups
 );
 
 at::Tensor involution2d_backward_grad_input(
     const at::Tensor& grad,
     const at::Tensor& weight,
-    const at::IntArrayRef& input_shape,
-    const at::IntArrayRef& kernel_size,
-    const at::IntArrayRef& stride,
-    const at::IntArrayRef& padding,
-    const at::IntArrayRef& dilation,
+    const std::vector<int64_t>& input_shape,
+    const std::vector<int64_t>& kernel_size,
+    const std::vector<int64_t>& stride,
+    const std::vector<int64_t>& padding,
+    const std::vector<int64_t>& dilation,
     const int64_t groups
 );
 
 at::Tensor involution2d_backward_grad_weight(
     const at::Tensor& grad,
     const at::Tensor& input,
-    const at::IntArrayRef& weight_shape,
-    const at::IntArrayRef& kernel_size,
-    const at::IntArrayRef& stride,
-    const at::IntArrayRef& padding,
-    const at::IntArrayRef& dilation,
+    const std::vector<int64_t>& weight_shape,
+    const std::vector<int64_t>& kernel_size,
+    const std::vector<int64_t>& stride,
+    const std::vector<int64_t>& padding,
+    const std::vector<int64_t>& dilation,
     const int64_t groups
 );
 
@@ -48,10 +48,10 @@ std::vector<at::Tensor> involution2d_backward(
     const at::Tensor& grad,
     const at::Tensor& weight,
     const at::Tensor& input,
-    const at::IntArrayRef& kernel_size,
-    const at::IntArrayRef& stride,
-    const at::IntArrayRef& padding,
-    const at::IntArrayRef& dilation,
+    const std::vector<int64_t>& kernel_size,
+    const std::vector<int64_t>& stride,
+    const std::vector<int64_t>& padding,
+    const std::vector<int64_t>& dilation,
     const int64_t groups
 );
 
