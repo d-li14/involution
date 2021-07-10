@@ -7,7 +7,7 @@
 namespace involution {
 namespace cuda {
 
-#define CUDA_MAX_THREADS 512u
+#define CUDA_MAX_THREADS 1024u
 
 #define CUDA_KERNEL_LOOP(i, n) \
     for (int64_t i = blockIdx.x * blockDim.x + threadIdx.x; i < (n); i += blockDim.x * gridDim.x)
