@@ -24,10 +24,6 @@ TORCH_LIBRARY_IMPL(involution, CUDA, m) {
 }
 #endif
 
-// TORCH_LIBRARY_IMPL(involution, Autocast, m) {
-//     m.impl("involution2d", involution2d_autocast);
-// }
-
 TORCH_LIBRARY_IMPL(involution, AutogradCPU, m) {
     m.impl("involution2d", involution::cpu::involution2d_autograd);
 }
@@ -35,5 +31,9 @@ TORCH_LIBRARY_IMPL(involution, AutogradCPU, m) {
 #ifdef USE_CUDA
 TORCH_LIBRARY_IMPL(involution, AutogradCUDA, m) {
     m.impl("involution2d", involution::cuda::involution2d_autograd);
+}
+
+TORCH_LIBRARY_IMPL(involution, Autocast, m) {
+    m.impl("involution2d", involution::cuda::involution2d_autocast);
 }
 #endif
