@@ -1,9 +1,9 @@
 #pragma once
 
 #include <ATen/core/dispatch/Dispatcher.h>
+#include <ATen/autocast_mode.h>
 #include <torch/csrc/autograd/custom_function.h>
 
-#include "autocast.h"
 #include "involution2d_cpu.h"
 
 #ifdef USE_CUDA
@@ -34,7 +34,8 @@ at::Tensor involution2d_autocast(
     const std::vector<int64_t>& dilation
 ) {
     c10::impl::ExcludeDispatchKeyGuard no_autocast(c10::DispatchKey::Autocast);
-    return involution2d(autocast::_cast(at::kFloat, input), autocast::_cast(at::kFloat, weight), stride, padding, dilation)
+    auto exec_type = at::autocast::promote_type(at::kFloat, input, weight);
+    return involution2d(at::autocast::cached_cast(exec_type, input), at::autocast::cached_cast(exec_type, weight), stride, padding, dilation)
         .to(input.scalar_type());
 }
 
@@ -206,6 +207,24 @@ at::Tensor involution2d_autograd(
     const int64_t groups
 ) {
     return Involution2dFunctionCUDA::apply(input, weight, kernel_size, stride, padding, dilation, groups)[0];
+}
+
+at::Tensor involution2d_autocast(
+    const torch::autograd::Variable& input,
+    const torch::autograd::Variable& weight,
+    const std::vector<int64_t>& kernel_size,
+    const std::vector<int64_t>& stride,
+    const std::vector<int64_t>& padding,
+    const std::vector<int64_t>& dilation,
+    const int64_t groups
+) {
+    c10::impl::ExcludeDispatchKeyGuard no_autocast(c10::DispatchKey::Autocast);
+    auto exec_type = at::autocast::promote_type(at::kFloat, input, weight);
+    return involution2d_autograd(
+        at::autocast::cached_cast(exec_type, input),
+        at::autocast::cached_cast(exec_type, weight),
+        kernel_size, stride, padding, dilation, groups
+    );
 }
 
 } // namespace cuda
