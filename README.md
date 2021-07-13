@@ -6,7 +6,7 @@ By [Duo Li](https://duoli.org/), [Jie Hu](https://github.com/hujie-frank), [Chan
 
 <p align="center"><img src="fig/involution.png" width="500" /></p>
 
-**TL; DR.** `involution` is a general-purpose neural primitive that is versatile for a spectrum of deep learning models on different vision tasks. `involution` bridges `convolution` and `self-attention` in design, while being more efficient and effective than `convolution`, simpler than `self-attention` in form. 
+**TL; DR.** `involution` is a general-purpose neural primitive that is versatile for a spectrum of deep learning models on different vision tasks. `involution` bridges `convolution` and `self-attention` in design, while being more efficient and effective than `convolution`, simpler than `self-attention` in form.
 
 <p align="center"><img src="fig/complexity.png" width="400" /><img src="fig/parameter.png" width="400" /></p>
 
