@@ -8,11 +8,19 @@ EXTRA_COMPILE_ARGS = ['-O3']
 
 EXTENSION = []
 
+CC = ['52', '53', '60', '61', '62', '70', '72', '75', '80']
+
 if os.getenv('USE_OPENMP', '1') == '1':
     EXTRA_COMPILE_ARGS.append('-fopenmp')
 
 if os.getenv('USE_CUDA', '1') == '1':
     EXTRA_COMPILE_ARGS.append('-DUSE_CUDA')
+
+    GENERATE_CODES = []
+
+    for cc in CC:
+        GENERATE_CODES.append('--generate-code')
+        GENERATE_CODES.append(f'arch=compute_{cc},code=compute_{cc}')
 
     EXTENSION.append(
         CUDAExtension(
@@ -27,7 +35,7 @@ if os.getenv('USE_CUDA', '1') == '1':
             ],
             extra_compile_args={
                 'cxx': EXTRA_COMPILE_ARGS,
-                'nvcc': ['-O3'],
+                'nvcc': ['-O3'] + GENERATE_CODES,
             }
         )
     )
