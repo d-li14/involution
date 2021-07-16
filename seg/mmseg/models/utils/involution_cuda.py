@@ -248,10 +248,12 @@ class involution(nn.Module):
     def __init__(self,
                  channels,
                  kernel_size,
-                 stride):
+                 stride,
+                 dilation=1):
         super(involution, self).__init__()
         self.kernel_size = kernel_size
         self.stride = stride
+        self.dilation = dilation
         self.channels = channels
         reduction_ratio = 4
         self.group_channels = 16
@@ -278,5 +280,5 @@ class involution(nn.Module):
         weight = self.conv2(self.conv1(x if self.stride == 1 else self.avgpool(x)))
         b, c, h, w = weight.shape
         weight = weight.view(b, self.groups, self.kernel_size, self.kernel_size, h, w)
-        out = _involution_cuda(x, weight, stride=self.stride, padding=(self.kernel_size-1)//2)
+        out = _involution_cuda(x, weight, stride=self.stride, padding=self.dilation * (self.kernel_size-1) // 2, dilation=self.dilation)
         return out

@@ -80,7 +80,7 @@ class Bottleneck(nn.Module):
             stride=self.conv1_stride,
             bias=False)
         self.add_module(self.norm1_name, norm1)
-        self.conv2 = involution(self.mid_channels, 7, self.conv2_stride)
+        self.conv2 = involution(self.mid_channels, 7, self.conv2_stride, dilation=dilation)
 
         self.add_module(self.norm2_name, norm2)
         self.conv3 = build_conv_layer(
@@ -201,6 +201,7 @@ class ResLayer(nn.Sequential):
                  out_channels,
                  expansion=None,
                  stride=1,
+                 dilation=1,
                  avg_down=False,
                  conv_cfg=None,
                  norm_cfg=dict(type='BN'),
@@ -239,6 +240,7 @@ class ResLayer(nn.Sequential):
                 out_channels=out_channels,
                 expansion=self.expansion,
                 stride=stride,
+                dilation=dilation,
                 downsample=downsample,
                 conv_cfg=conv_cfg,
                 norm_cfg=norm_cfg,
@@ -251,6 +253,7 @@ class ResLayer(nn.Sequential):
                     out_channels=out_channels,
                     expansion=self.expansion,
                     stride=1,
+                    dilation=dilation,
                     conv_cfg=conv_cfg,
                     norm_cfg=norm_cfg,
                     **kwargs))
