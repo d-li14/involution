@@ -7,10 +7,12 @@ class involution(nn.Module):
     def __init__(self,
                  channels,
                  kernel_size,
-                 stride):
+                 stride,
+                 dilation=1):
         super(involution, self).__init__()
         self.kernel_size = kernel_size
         self.stride = stride
+        self.dilation=dilation
         self.channels = channels
         reduction_ratio = 4
         self.group_channels = 16
@@ -32,7 +34,7 @@ class involution(nn.Module):
             act_cfg=None)
         if stride > 1:
             self.avgpool = nn.AvgPool2d(stride, stride)
-        self.unfold = nn.Unfold(kernel_size, 1, (kernel_size-1)//2, stride)
+        self.unfold = nn.Unfold(kernel_size, dilation, dilation * (kernel_size-1) // 2, stride)
 
     def forward(self, x):
         weight = self.conv2(self.conv1(x if self.stride == 1 else self.avgpool(x)))
